@@ -1,0 +1,15 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+<form action="{{ url('login_submit') }}" method="post">
+    <label>
+        {{ 'email' | trans }}
+        <input type="email" name="email" placeholder="{{ 'email' | trans }}">
+    </label>
+    <label>
+        {{ 'password' | trans }}
+        <input type="password" name="password" placeholder="{{ 'password' | trans }}">
+    </label>
+    <input type="submit" value="submit"/>
+</form>
+{% endblock %}

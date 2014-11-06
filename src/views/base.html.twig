@@ -1,0 +1,25 @@
+<html>
+    <head>
+        {#<link rel="stylesheet" href="style.css" />#}
+        <title>Share</title>
+
+        {% block stylesheets %}
+        {% endblock %}
+    </head>
+
+    <body>
+        <div id="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+        <div id="footer">
+            {% block footer %}
+                &copy; Copyright 2014 by Philip Heimböck.
+            {% endblock %}
+        </div>
+
+        {% block javascripts %}
+        {% endblock %}
+    </body>
+</html>

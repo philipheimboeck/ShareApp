@@ -1,0 +1,26 @@
+{
+    "name": "controller/controller-app",
+    "license": "Copyright (C) 2014 Philip Heimböck - All rights reserved",
+    "description": "Share Application",
+    "authors": [
+        {
+            "name": "Philip Heimböck",
+            "email": "philipheimboeck@gmail.com"
+        }
+    ],
+    "require": {
+        "silex/silex": "1.2.*",
+        "doctrine/dbal": "2.2.*",
+        "twig/twig": ">=1.8,<2.0-dev",
+        "symfony/twig-bridge": "~2.3",
+        "symfony/translation": "~2.3",
+        "symfony/config": "~2.3",
+        "symfony/yaml": "~2.3"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": {
+            "src": "./"
+        }
+    }
+}
