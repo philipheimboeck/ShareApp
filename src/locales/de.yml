@@ -1,2 +1,14 @@
-email: email
-password: passwort
+email: Email Adresse
+password: Passwort
+
+login: Anmelden
+login.failed: Login ist fehlgeschlagen. Bitte überprüfen Sie Email und Passwort.
+logout: Abmelden
+
+shares.no_content: Bisher wurde nichts geteilt...
+shares.share_something: Ändere das
+shares.current: Aktuelle Shares
+shares.new: Teile etwas
+
+error.user.notexisting: Dieser Benutzer existiert nicht!
+error.maxsize.exceeded: Der Inhalt der Nachricht ist zu lang!

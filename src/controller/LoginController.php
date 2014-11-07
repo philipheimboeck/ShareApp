@@ -11,7 +11,6 @@ namespace src\controller;
 use src\model\UserService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class LoginController {
 
@@ -34,10 +33,11 @@ class LoginController {
         $password = $request->get('password');
 
         if ($this->user_service->checkLogin($email, $password)) {
-            $request->getSession()->set('login', true);
-            return new Response("Logged in successfully");
+            $request->getSession()->set('login', $email);
+            return new RedirectResponse('shares');
         }
-        return new RedirectResponse('login');
+        $request->getSession()->getFlashBag()->add('error', 'login.failed');
+        return $this->twig->render('login.html.twig', array('email' => $email));
     }
 
     public function logoutAction(Request $request) {

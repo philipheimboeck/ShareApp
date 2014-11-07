@@ -1,15 +1,39 @@
 {% extends "base.html.twig" %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('src/views/css/login.css') }}"/>
+{% endblock %}
+
 {% block content %}
-<form action="{{ url('login_submit') }}" method="post">
-    <label>
-        {{ 'email' | trans }}
-        <input type="email" name="email" placeholder="{{ 'email' | trans }}">
-    </label>
-    <label>
-        {{ 'password' | trans }}
-        <input type="password" name="password" placeholder="{{ 'password' | trans }}">
-    </label>
-    <input type="submit" value="submit"/>
-</form>
+    <div class="row">
+        <div class="col-lg-8">
+            <img src="{{ asset('/src/views/img/placeholder1.jpg') }}" width="600">
+        </div>
+
+        <div class="col-lg-4 login-box"
+            <form action="{{ url('login_submit') }}" method="post" role="form">
+                <div class="form-group">
+                    <label>
+                        {{ 'email' | trans }}
+                        <input type="email" name="email" placeholder="{{ 'email' | trans }}" class="form-control"
+                               value="{{ email is defined? email : '' }}">
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        {{ 'password' | trans }}
+                        <input type="password" name="password" placeholder="{{ 'password' | trans }}"
+                               class="form-control">
+                    </label>
+                </div>
+
+                <input type="submit" value="submit" class="btn btn-default"/>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        {#More content here#}
+    </div>
+
 {% endblock %}

@@ -8,19 +8,19 @@
 namespace src\model;
 
 
-use src\repository\UserFacade;
+use src\repository\UserRepository;
 
 class UserService {
 
-    protected $user;
+    protected $user_repository;
 
-    function __construct(UserFacade $user)
+    function __construct(UserRepository $user_repository)
     {
-        $this->user = $user;
+        $this->user_repository = $user_repository;
     }
 
-    public function checkLogin($username, $password) {
-        $data = $this->user->getPassword($username);
+    public function checkLogin($email, $password) {
+        $data = $this->user_repository->getPassword($email);
         if ( $data ) {
             return $password === $data;
         }
@@ -28,4 +28,13 @@ class UserService {
         return false;
     }
 
-} 
+    public function getCollections($email) {
+        return $this->user_repository->getCollections($email);
+    }
+
+    public function getFriends($email)
+    {
+        return $this->user_repository->getFriends($email);
+    }
+
+}

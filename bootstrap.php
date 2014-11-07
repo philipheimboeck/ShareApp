@@ -6,9 +6,12 @@
  */
 use src\controller\LoginController;
 use src\controller\ShareController;
+use src\model\CollectionService;
+use src\model\ShareService;
 use src\model\UserService;
-use src\repository\UserFacade;
-use Symfony\Component\HttpFoundation\Response;
+use src\repository\CollectionRepository;
+use src\repository\ShareRepository;
+use src\repository\UserRepository;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 
@@ -48,12 +51,30 @@ $app['translator'] = $app->share($app->extend('translator', function (Translator
     return $translator;
 }));
 
+$app['twig'] = $app->share($app->extend('twig', function($twig) {
+    $twig->addFunction(new \Twig_SimpleFunction('asset', function ($asset) {
+        // implement whatever logic you need to determine the asset path
+
+        return sprintf('/%s', ltrim($asset, '/'));
+    }));
+
+    return $twig;
+}));
+
 /*
  * Repositories
  */
 
 $app['repository.user'] = $app->share(function () use ($app) {
-    return new UserFacade($app['db']);
+    return new UserRepository($app['db']);
+});
+
+$app['repository.share'] = $app->share(function () use ($app) {
+    return new ShareRepository($app['db']);
+});
+
+$app['repository.collection'] = $app->share(function () use ($app) {
+    return new CollectionRepository($app['db']);
 });
 
 /*
@@ -64,12 +85,20 @@ $app['model.user'] = $app->share(function () use ($app) {
     return new UserService($app['repository.user']);
 });
 
+$app['model.share'] = $app->share(function () use ($app) {
+    return new ShareService($app['repository.share'], $app['repository.user']);
+});
+
+$app['model.collection'] = $app->share(function () use ($app) {
+    return new CollectionService($app['repository.collection'], $app['repository.user']);
+});
+
 /*
  * Controllers
  */
 
 $app['controller.share_controller'] = $app->share(function () use ($app) {
-    return new ShareController();
+    return new ShareController($app['model.share'], $app['model.user'], $app['model.collection'], $app['twig']);
 });
 
 $app['controller.login_controller'] = $app->share(function() use ($app) {
@@ -89,12 +118,9 @@ $app->post('/login', "controller.login_controller:loginAction")->bind('login_sub
 $app->get('/logout', "controller.login_controller:logoutAction")->bind('logout');
 
 /* Data */
-$app->get('/', function () use ($app) {
-    if ($app['session']->get('login') === null) {
-        return $app->redirect('login');
-    }
-    return new Response($app['controller.share_controller']->getData());
-});
+$app->get('/shares', "controller.share_controller:indexAction")->bind('content');
+
+$app->post('/shares/submit', "controller.share_controller:shareAction")->bind('submit_share');
 
 // Debug mode
 $app['debug'] = true;

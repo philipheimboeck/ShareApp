@@ -1,2 +1,14 @@
-email: email
-password: password
+email: Email address
+password: Password
+
+login: Sign In
+login.failed: Login failed. Please check email and password.
+logout: Logout
+
+shares.no_content: No content yet...
+shares.share_something: Share something
+shares.current: Recently shared
+shares.new: Share something
+
+error.user.notexisting: This user is not existing!
+error.maxsize.exceeded: The maximal length of the content was exceeded!

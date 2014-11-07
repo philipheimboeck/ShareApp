@@ -10,7 +10,7 @@ namespace src\repository;
 
 use Doctrine\DBAL\Connection;
 
-abstract class AbstractFacade {
+abstract class AbstractRepository {
 
     /** @var  Connection */
     protected $database;

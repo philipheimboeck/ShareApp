@@ -1,0 +1,52 @@
+{% extends "base.html.twig" %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('src/views/css/content.css') }}"/>
+{% endblock %}
+
+{% block content %}
+
+
+    <div class="row content-form">
+        <div class="col-lg-12">
+            <fieldset>
+                <div class="row">
+                    <legend>{{ 'shares.new' | trans }}</legend>
+                </div>
+
+                <div class="row">
+                    <form action="{{ url('submit_share') }}" method="post" role="form">
+                        <div class="col-lg-11">
+                            <div class="form-group">
+                                <label>{{ '' }}<textarea name="share" maxlength="1024"
+                                                         class="form-control"></textarea></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-1">
+                            <input type="submit" class="btn btn-primary pull-right"/>
+                        </div>
+                    </form>
+                </div>
+            </fieldset>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <fieldset>
+                <div class="row">
+                    <legend>{{ 'shares.current' | trans }}</legend>
+                </div>
+
+                {% if shares is defined and shares is not empty %}
+                    {% for share in shares %}
+                        {% include 'components/share_content.html.twig' with {'share': share} %}
+                    {% endfor %}
+                {% endif %}
+            </fieldset>
+        </div>
+
+    </div>
+
+{% endblock %}
