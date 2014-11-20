@@ -11,15 +11,15 @@ namespace src\repository;
 class CollectionRepository extends AbstractRepository {
 
 
-    public function getInboxCollection($email)
+    public function getInboxCollection($id)
     {
         $sql = 'SELECT user_collection.collection FROM user_collection WHERE user_collection.user = ? AND user_collection.is_default LIMIT 1';
-        return $this->database->fetchColumn($sql, array($email));
+        return $this->database->fetchColumn($sql, array($id));
     }
 
-    public function getCollectionByLabel($email, $label)
+    public function getCollectionByLabel($id, $label)
     {
-        $sql = 'SELECT collection.id FROM collection INNER JOIN user_collection ON collection.id = user_collection.collection WHERE user_collection.user = ? AND collection.label = ?';
-        return $this->database->fetchColumn($sql, array($email, $label));
+        $sql = 'SELECT collection.id FROM collection INNER JOIN user_collection ON collection.id = user_collection.collection WHERE user_collection.user = ? AND collection.label LIKE ?';
+        return $this->database->fetchColumn($sql, array($id, '%' . $label . '%'));
     }
 }

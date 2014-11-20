@@ -17,15 +17,15 @@ class ShareRepository extends AbstractRepository
         return $this->database->fetchAssoc($sql);
     }
 
-    public function getUserShares($username)
+    public function getUserShares($id)
     {
-        $sql = 'SELECT * FROM share WHERE share."user" = ?';
-        return $this->database->fetchAll($sql, array($username));
+        $sql = 'SELECT share.* FROM share INNER JOIN user_collection ON user_collection.id = share.collection WHERE user_collection.user = ?';
+        return $this->database->fetchAll($sql, array($id));
     }
 
-    public function createShare($email, $content, $collection)
+    public function createShare($id, $content, $collection)
     {
         return $this->database->insert('share',
-            array('user' => $email, 'content' => $content, 'collection' => $collection));
+            array('user' => $id, 'content' => $content, 'collection' => $collection));
     }
 }

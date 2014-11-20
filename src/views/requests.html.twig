@@ -1,0 +1,41 @@
+{% extends "base.html.twig" %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+
+        <div class="col-lg-12">
+            <fieldset>
+                <legend>{{ 'friend.new' | trans }}</legend>
+
+                <div class="row">
+                    <form action="{{ url('request_submit') }}" method="post" role="form">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label>{{ '' }}<input name="friend" type="text" class="form-control"/></label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <input type="submit" class="btn btn-primary"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for request in requests %}
+            {{ request.user1 }} to {{ request.user2 }} {{ request.id }}
+            <form action="{{ url('request_answer', {'id': request.id}) }}" method="post" role="form">
+                <button type="submit" name="acceptance" value="true">{{ 'request.accept' | trans }}</button>
+                <button type="submit" name="acceptance" value="false">{{ 'request.reject' | trans }}</button>
+            </form>
+        {% endfor %}
+    </div>
+
+{% endblock %}

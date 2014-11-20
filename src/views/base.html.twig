@@ -16,7 +16,7 @@
                 {% if not app.session.get('login') %}
                     <a href="{{ url('login') }}" class="btn btn-primary pull-right">{{ 'login' | trans }}</a>
                {% else %}
-                   {{ app.session.get('login') }}
+                   {{ app.session.get('login')['username'] }}
                    <a href="{{ url('logout') }}" class="btn btn-primary pull-right">{{ 'logout' | trans }}</a>
                 {% endif %}
             {% endblock %}

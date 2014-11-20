@@ -1,9 +1,14 @@
 email: Email address
+user: Email/Username
+username: Username
 password: Password
 
 login: Sign In
 login.failed: Login failed. Please check email and password.
 logout: Logout
+
+register.email.used: Email address is already in use.
+register.incorrect.password: The passwords are not equal.
 
 shares.no_content: No content yet...
 shares.share_something: Share something

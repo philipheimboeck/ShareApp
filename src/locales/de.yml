@@ -1,9 +1,14 @@
 email: Email Adresse
+user: Email/Benutzername
+username: Benutzername
 password: Passwort
 
 login: Anmelden
 login.failed: Login ist fehlgeschlagen. Bitte überprüfen Sie Email und Passwort.
 logout: Abmelden
+
+register.email.used: Email wird bereits benutzt.
+register.incorrect.password: Passworter unterscheiden sich.
 
 shares.no_content: Bisher wurde nichts geteilt...
 shares.share_something: Ändere das

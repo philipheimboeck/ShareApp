@@ -23,17 +23,17 @@ class ShareService
         $this->user_repository = $user_repository;
     }
 
-    public function getUserShares($email)
+    public function getUserShares($user_id)
     {
-        return $this->share_repository->getUserShares($email);
+        return $this->share_repository->getUserShares($user_id);
     }
 
-    public function createShare($email, $content, $collection)
+    public function createShare($user_id, $content, array $collections)
     {
         // Validate
 
         // Existing user?
-        if ( empty($this->user_repository->getUser($email))) {
+        if ( empty($this->user_repository->isUserExistingById($user_id))) {
             throw new Exception('error.user.notexisting');
         }
 
@@ -43,7 +43,9 @@ class ShareService
         }
 
         // Share the url
-        return $this->share_repository->createShare($email, $content, $collection);
+        foreach ( $collections as $collection) {
+            $this->share_repository->createShare($user_id, $content, $collection);
+        }
     }
 
 } 

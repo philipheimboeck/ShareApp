@@ -33,51 +33,58 @@ class ShareController
 
     public function indexAction(Request $request)
     {
-        $email = $request->getSession()->get('login');
-        if ($email === null) {
+        $login = $request->getSession()->get('login');
+        if ($login === null) {
             return new RedirectResponse('login');
         }
 
-        $shares = $this->share_service->getUserShares($email);
-        $collections = $this->user_service->getCollections($email);
-        $friends = $this->user_service->getFriends($email);
+        $shares = $this->share_service->getUserShares($login['id']);
+        $collections = $this->user_service->getCollections($login['id']);
+        $friends = $this->user_service->getFriends($login['id']);
 
         return $this->twig->render('content.html.twig', array('shares' => $shares, 'collections' => $collections, 'friends' => $friends));
     }
 
     public function shareAction(Request $request)
     {
-        $email = $request->getSession()->get('login');
-        if (!$email) {
+        $login = $request->getSession()->get('login');
+        if (!$login) {
             return new RedirectResponse('login');
         }
 
         $content = $request->get('share');
 
-        $collection = array();
-        $matches = array();
-        if (preg_match_all('/\+\S+/', $content, $matches)) {
-            foreach($matches as $match) {
-                // Send to other User
-                $collection = $this->collection_service->getForeignInboxCollection($email, $match[0]);
-            }
-        }
-
-        if (preg_match_all('/@\S+/', $content, $matches)) {
-            // Send to chosen Collection
-            $collection = $this->collection_service->getCollection($email, $matches[0]);
-        }
-
-        if ( empty($collection)) {
-            $collection[] = $this->collection_service->getOwnInboxCollection($email);
-        }
+        // Find links
+        $link_pattern = '/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/';
+        $content = preg_replace($link_pattern, '<a href="$0">$0</a>', $content);
 
         try {
-            $this->share_service->createShare($email, $content, $collection);
-        } catch ( \Exception $exception ) {
+            $collection = array();
+            $matches = array();
+            if (preg_match_all('/\+\S+/', $content, $matches)) {
+                foreach ($matches as $match) {
+                    // Send to other User
+                    $user = ltrim($match[0], ' +');
+                    $collection = $this->collection_service->getForeignInboxCollection($login['id'], $user);
+                }
+            }
+
+            if (preg_match_all('/@\S+/', $content, $matches)) {
+                // Send to chosen Collection
+                $collection = $this->collection_service->getCollection($login['id'], $matches[0]);
+            }
+
+            if (empty($collection)) {
+                $collection[] = $this->collection_service->getOwnInboxCollection($login['id']);
+            }
+
+
+            $this->share_service->createShare($login['id'], $content, $collection);
+
+        } catch (\Exception $exception) {
             $request->getSession()->getFlashBag()->add('error', $exception->getMessage());
         }
 
-        return new RedirectResponse('/shares');
+        return new RedirectResponse('/');
     }
 }

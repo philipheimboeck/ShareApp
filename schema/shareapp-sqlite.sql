@@ -10,7 +10,9 @@ CREATE TABLE collection (
 DROP TABLE IF EXISTS user;
 
 CREATE TABLE user (
-  email varchar(128) PRIMARY KEY NOT NULL,
+  id INTEGER PRIMARY KEY AUTOINCREMENT ,
+  email varchar(128) UNIQUE NOT NULL,
+  username varchar(64) UNIQUE NOT NULL,
   password varchar(32) NOT NULL,
   salt varchar(32) NOT NULL,
   active tinyint(4) NOT NULL DEFAULT '1',
@@ -24,9 +26,9 @@ CREATE TABLE friendship (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user1 varchar(128) NOT NULL,
   user2 varchar(128) NOT NULL,
-  user2_approved tinyint(11) NOT NULL DEFAULT 0,
-  CONSTRAINT fk_friendship_user_user1 FOREIGN KEY (user1) REFERENCES user (email) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT fk_friendship_user_user2 FOREIGN KEY (user2) REFERENCES user (email) ON DELETE RESTRICT ON UPDATE RESTRICT
+  accepted tinyint(11) NOT NULL DEFAULT 0,
+  CONSTRAINT fk_friendship_user_user1 FOREIGN KEY (user1) REFERENCES user (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT fk_friendship_user_user2 FOREIGN KEY (user2) REFERENCES user (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 DROP TABLE IF EXISTS share;
@@ -38,7 +40,7 @@ CREATE TABLE share (
   collection int(11) NOT NULL,
   created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  CONSTRAINT fk_share_user_user FOREIGN KEY (user) REFERENCES user(email) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT fk_share_user_user FOREIGN KEY (user) REFERENCES user(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT fk_share_collection_collection FOREIGN KEY (collection) REFERENCES collection(id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
@@ -52,6 +54,6 @@ CREATE TABLE user_collection (
   is_admin tinyint(4) NOT NULL DEFAULT '0',
   is_default tinyint(4) NOT NULL DEFAULT '0',
 
-  CONSTRAINT fk_user_collection_user FOREIGN KEY (user) REFERENCES user(email) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT fk_user_collection_user FOREIGN KEY (user) REFERENCES user(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT fk_user_collection_collection FOREIGN KEY (collection) REFERENCES collection(id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );

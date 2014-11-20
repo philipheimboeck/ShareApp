@@ -4,12 +4,15 @@
  * Date: 31.10.14
  * Time: 22:23
  */
+use src\controller\FriendshipController;
 use src\controller\LoginController;
 use src\controller\ShareController;
 use src\model\CollectionService;
+use src\model\FriendshipService;
 use src\model\ShareService;
 use src\model\UserService;
 use src\repository\CollectionRepository;
+use src\repository\FriendshipRepository;
 use src\repository\ShareRepository;
 use src\repository\UserRepository;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
@@ -77,6 +80,10 @@ $app['repository.collection'] = $app->share(function () use ($app) {
     return new CollectionRepository($app['db']);
 });
 
+$app['repository.friendship'] = $app->share(function () use ($app) {
+    return new FriendshipRepository($app['db']);
+});
+
 /*
  * Models
  */
@@ -93,6 +100,10 @@ $app['model.collection'] = $app->share(function () use ($app) {
     return new CollectionService($app['repository.collection'], $app['repository.user']);
 });
 
+$app['model.friendship'] = $app->share(function () use ($app) {
+    return new FriendshipService($app['repository.friendship'], $app['repository.user']);
+});
+
 /*
  * Controllers
  */
@@ -103,6 +114,10 @@ $app['controller.share_controller'] = $app->share(function () use ($app) {
 
 $app['controller.login_controller'] = $app->share(function() use ($app) {
     return new LoginController($app['model.user'], $app['twig']);
+});
+
+$app['controller.friendship_controller'] = $app->share(function() use ($app) {
+    return new FriendshipController($app['model.friendship'], $app['twig']);
 });
 
 /*
@@ -117,10 +132,21 @@ $app->post('/login', "controller.login_controller:loginAction")->bind('login_sub
 
 $app->get('/logout', "controller.login_controller:logoutAction")->bind('logout');
 
-/* Data */
-$app->get('/shares', "controller.share_controller:indexAction")->bind('content');
+$app->get('/register', "controller.login_controller:registerAction")->bind('register');
 
-$app->post('/shares/submit', "controller.share_controller:shareAction")->bind('submit_share');
+$app->post('/register', "controller.login_controller:registerSubmitAction")->bind('register_submit');
+
+/* Data */
+
+$app->get('/', "controller.share_controller:indexAction")->bind('shares');
+
+$app->post('/submit', "controller.share_controller:shareAction")->bind('shares_submit');
+
+$app->get('/friends', "controller.friendship_controller:indexAction")->bind('friends');
+
+$app->post('/request', "controller.friendship_controller:submitAction")->bind('request_submit');
+
+$app->post('/request/{id}', "controller.friendship_controller:answerAction")->bind('request_answer');
 
 // Debug mode
 $app['debug'] = true;

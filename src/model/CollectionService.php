@@ -7,6 +7,7 @@
 
 namespace src\model;
 
+use src\controller\LoginController;
 use src\repository\CollectionRepository;
 use src\repository\UserRepository;
 
@@ -24,25 +25,33 @@ class CollectionService {
     /**
      * Return the collection for the user
      *
-     * @param $email
+     * @param $user_id
+     * @param $label
      * @return mixed
      */
-    public function getCollection($email, $label)
+    public function getCollection($user_id, $label)
     {
-        return $this->collection_repository->getCollectionByLabel($email, $label);
+        return $this->collection_repository->getCollectionByLabel($user_id, $label);
     }
 
     /**
      * Return the inbox collection for the second user if the users are friends
      *
-     * @param $user1
+     * @param $user1_id
      * @param $user2
      * @return mixed
      * @throws \Exception
      */
-    public function getForeignInboxCollection($user1, $user2)
+    public function getForeignInboxCollection($user1_id, $user2)
     {
-        if ( !$this->user_repository->areFriends($user1, $user2)) {
+        // Get id of user2
+        if ( preg_match($user2, LoginController::EMAIL_PATTERN) ) {
+            $user2 = $this->user_repository->getIdByMail($user2);
+        } else {
+            $user2 = $this->user_repository->getIdByUser($user2);
+        }
+
+        if ( !$this->user_repository->areFriends($user1_id, $user2)) {
             throw new \Exception('error.not.friends');
         }
 
@@ -52,11 +61,11 @@ class CollectionService {
     /**
      * Return the inbox collection of the given user
      *
-     * @param $email
+     * @param $user_id
      * @return mixed
      */
-    public function getOwnInboxCollection($email)
+    public function getOwnInboxCollection($user_id)
     {
-        return $this->collection_repository->getInboxCollection($email);
+        return $this->collection_repository->getInboxCollection($user_id);
     }
 }
